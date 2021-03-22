@@ -34,3 +34,17 @@ class Author(Base):
     __tablename__ = 'author'
     id = Column(Integer, primary_key=True)
     name = Column(String)
+
+
+class Comment(Base):
+    __tablename__ = 'comment'
+    id = Column(Integer, primary_key=True)
+    author_text = Column(String)
+    text = Column(String)
+    likes = Column(Integer)
+    dislikes = Column(Integer)
+    times = Column(Integer)
+
+    article = relationship("Article", backref=backref("article", lazy=True))
+    article_id = Column(Integer, ForeignKey("article.id"), nullable=False)
+
