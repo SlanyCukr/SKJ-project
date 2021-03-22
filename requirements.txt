@@ -1,2 +1,3 @@
 requests==2.22.0
 mechanicalsoup==1.0.0
+sqlalchemy==1.3.16
