@@ -2,8 +2,8 @@ from datetime import datetime
 import json
 import mechanicalsoup
 
-from scraper.database.base_objects import Article
-from scraper.database.db_utils import save_to_db
+from database.base_objects import Article
+from scraper.db_utils import save_to_db
 
 BASE_URL = "https://novinky.cz/stalo-se"
 

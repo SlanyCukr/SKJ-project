@@ -45,6 +45,9 @@ class Comment(Base):
     dislikes = Column(Integer)
     times = Column(Integer)
 
-    article = relationship("Article", backref=backref("article", lazy=True))
+    article = relationship("Article", backref=backref("comment_article", lazy=True))
     article_id = Column(Integer, ForeignKey("article.id"), nullable=False)
+
+
+
 
