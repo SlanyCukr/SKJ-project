@@ -1,46 +1,17 @@
-class Article:
-    def __int__(self, **kwargs):
-        if 'link' in kwargs:
-            self.link = kwargs['link']
-        else:
-            raise Exception("Link cannot be empty.")
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String, DateTime
 
-        if 'header' in kwargs:
-            self.header = kwargs['header']
-        else:
-            self.header = ""
+Base = declarative_base()
 
-        if 'description' in kwargs:
-            self.description = kwargs['header']
-        else:
-            self.description = ""
 
-        if 'category' in kwargs:
-            self.category = kwargs['category']
-        else:
-            self.category = ""
+class Article(Base):
+    __tablename__ = 'article'
 
-        if 'author' in kwargs:
-            self.author = kwargs['author']
-        else:
-            self.author = ""
-
-        if 'published_at' in kwargs:
-            self.published_at = kwargs['published_at']
-        else:
-            self.published_at = ""
-
-        if 'modified_at' in kwargs:
-            self.modified_at = kwargs['modified_at']
-        else:
-            self.modified_at = ""
-
-        if 'paragraphs' in kwargs:
-            self.paragraphs = kwargs['paragraphs']
-        else:
-            self.paragraphs = ""
-
-        if 'comments' in kwargs:
-            self.comments = kwargs['comments']
-        else:
-            self.comments = []
+    id = Column(Integer, primary_key=True)
+    link = Column(String)
+    header = Column(String)
+    description = Column(String)
+    category = Column(String)
+    published_at = Column(DateTime)
+    modified_at = Column(DateTime)
+    paragraphs = Column(String)

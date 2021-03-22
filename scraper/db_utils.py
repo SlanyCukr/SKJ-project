@@ -1,0 +1,1 @@
+def save_to_db(article)

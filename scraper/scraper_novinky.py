@@ -7,13 +7,13 @@ from classes.Article import Article
 BASE_URL = "https://novinky.cz/stalo-se"
 
 
-def retrieve_paragraphs(page) -> []:
+def retrieve_paragraphs(page) -> str:
     paragraphs = page.select('div[data-dot-data=\'{"component":"article-content"}\'] p')
 
-    text_list = []
+    text = ""
     for paragraph in paragraphs:
-        text_list.append(paragraph.text)
-    return text_list
+        text += paragraph.text + "\n"
+    return text
 
 
 def retrieve_authors(page) -> []:
@@ -33,7 +33,7 @@ def find_category(first_script_data) -> str:
             return list_element["name"]
 
 
-def extract_article(browser: mechanicalsoup.StatefulBrowser, url: str) -> Article:
+def extract_article(browser: mechanicalsoup.StatefulBrowser, url: str) -> (Article, []):
     browser.open(url)
     page = browser.get_current_page()
 
@@ -49,7 +49,9 @@ def extract_article(browser: mechanicalsoup.StatefulBrowser, url: str) -> Articl
     authors = retrieve_authors(page)
     paragraphs = retrieve_paragraphs(page)
 
-    #return Article(header=header, description=description, category=category, published_at=published_at, modified_at=modified_at, authors=authors, paragraphs=paragraphs)
+    article = Article(link=url, header=header, description=description, category=category, published_at=published_at,
+                   modified_at=modified_at, paragraphs=paragraphs)
+    return article, authors
 
 
 if __name__ == '__main__':
@@ -62,7 +64,13 @@ if __name__ == '__main__':
     articles = []
     stalo_se_articles = page.select('div[data-dot="stalo_se"] a')
     for article in stalo_se_articles:
+        # skip not article
+        if 'lastItem' in article['href']:
+            continue
+
         articles.append(extract_article(browser, article['href']))
+
+    test = ""
 
 
 
