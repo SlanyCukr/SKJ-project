@@ -2,7 +2,8 @@ from datetime import datetime
 import json
 import mechanicalsoup
 
-from classes.Article import Article
+from scraper.database.base_objects import Article
+from scraper.database.db_utils import save_to_db
 
 BASE_URL = "https://novinky.cz/stalo-se"
 
@@ -70,7 +71,9 @@ if __name__ == '__main__':
 
         articles.append(extract_article(browser, article['href']))
 
-    test = ""
+    save_to_db(articles)
+
+
 
 
 
