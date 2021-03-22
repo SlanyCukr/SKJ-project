@@ -42,8 +42,8 @@ def extract_article(browser: mechanicalsoup.StatefulBrowser, url: str) -> (Artic
     first_script_data = json.loads(script_data[1].text)
     second_script_data = json.loads(script_data[0].text)
 
-    header = second_script_data["headline"]
-    description = second_script_data["description"]
+    header = second_script_data["headline"].replace(u'\xa0', ' ')
+    description = second_script_data["description"].replace(u'\xa0', ' ')
     category = find_category(first_script_data)
     published_at = datetime.strptime(second_script_data["datePublished"], '%Y-%m-%dT%H:%M:%S.%fZ')
     modified_at = datetime.strptime(second_script_data["dateModified"], '%Y-%m-%dT%H:%M:%S.%fZ')
