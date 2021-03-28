@@ -18,13 +18,15 @@ BASE_URL = "https://novinky.cz/stalo-se"
 def extract_info_from_iframe(browser: webdriver, url: str) -> []:
     try:
         # open all other pages with comments
-        while button := browser.find_element_by_css_selector("button[data-dot='strankovani/nacist_dalsi']"):
+        button = browser.find_element_by_css_selector("button[data-dot='strankovani/nacist_dalsi']")
+        while button:
             try:
                 action = ActionChains(browser)
                 action.move_to_element(button).click().perform()
             except ElementClickInterceptedException:
                 pass
             sleep(0.5)
+            button = browser.find_element_by_css_selector("button[data-dot='strankovani/nacist_dalsi']")
     except NoSuchElementException:
         pass
 
