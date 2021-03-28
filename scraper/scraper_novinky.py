@@ -1,17 +1,17 @@
 from datetime import datetime
 import json
 from time import sleep
-
-import mechanicalsoup
-from bs4 import BeautifulSoup
-
-from database.base_objects import Article, Comment
-from scraper.db_utils import save_to_db
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException, NoSuchElementException, ElementClickInterceptedException
+import mechanicalsoup
+from bs4 import BeautifulSoup
+from tqdm import tqdm
+
+from database.base_objects import Article, Comment
+from scraper.db_utils import save_to_db
 
 BASE_URL = "https://novinky.cz/stalo-se"
 
@@ -49,6 +49,7 @@ def extract_info_from_iframe(browser: webdriver, url: str) -> []:
     reactions = soup.select("a[class='f_cQ']")
 
     comments = []
+    progress_bar = tqdm(total=len(authors), desc="Comments", position=0)
     for i in range(len(authors)):
         author = authors[i].text
         text = texts[i].text
@@ -59,6 +60,7 @@ def extract_info_from_iframe(browser: webdriver, url: str) -> []:
             reactions_count = reactions[i].text
 
         comments.append(Comment(author=author, text=text, reactions=reactions_count))
+        progress_bar.update(1)
 
     return comments
 
@@ -71,12 +73,12 @@ def retrieve_comments(browser_, url: str) -> []:
     """
     ChromeOptions = webdriver.ChromeOptions()
     #ChromeOptions.add_argument('--headless')
-    browser = webdriver.Chrome(chrome_options=ChromeOptions, executable_path='/snap/bin/chromium.chromedriver')
+    browser = webdriver.Chrome(options=ChromeOptions, executable_path='/snap/bin/chromium.chromedriver')
     browser.implicitly_wait(6)
     browser.get(url)
 
     # selenium browser will wait for up to 6 seconds for iframes to load
-    element = browser.find_element_by_tag_name("iframe")
+    _ = browser.find_element_by_tag_name("iframe")
 
     soup = BeautifulSoup(browser.page_source, "html.parser")
     soup.select("iframe")
@@ -129,11 +131,13 @@ def extract_article(browser: mechanicalsoup.StatefulBrowser, url: str) -> (Artic
     authors = retrieve_authors(page)
     paragraphs = retrieve_paragraphs(page)
 
+    print(f"Currently working on article {header}")
+
     comments = retrieve_comments(browser, url.replace("clanek", "diskuze"))
 
     article = Article(link=url, header=header, description=description, category=category, published_at=published_at,
                    modified_at=modified_at, paragraphs=paragraphs)
-    return article, authors
+    return article, authors, comments
 
 
 if __name__ == '__main__':

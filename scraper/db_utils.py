@@ -15,9 +15,16 @@ def save_to_db(articles: []):
     for data in articles:
         article = data[0]
         authors = data[1]
+        comments = data[2]
 
         # save article do db
         session.add(article)
+        session.commit()
+
+        # save comments to db
+        for comment in comments:
+            comment.article = article
+        session.add_all(comments)
         session.commit()
 
         # check if we already have author saved
