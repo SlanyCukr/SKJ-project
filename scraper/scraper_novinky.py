@@ -3,13 +3,11 @@ import json
 from time import sleep
 from selenium import webdriver
 from selenium.webdriver import ActionChains
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException, ElementClickInterceptedException
 import mechanicalsoup
 from bs4 import BeautifulSoup
 from tqdm import tqdm
+import chromedriver_binary
 
 from database.base_objects import Article, Comment
 from scraper.db_utils import save_to_db
@@ -73,9 +71,12 @@ def retrieve_comments(browser_, url: str) -> []:
     :return: List of Comment objects
     """
     ChromeOptions = webdriver.ChromeOptions()
-    #ChromeOptions.add_argument('--headless')
-    ChromeOptions.add_argument('start-maximized')
-    browser = webdriver.Chrome(options=ChromeOptions, executable_path='/snap/bin/chromium.chromedriver')
+    ChromeOptions.add_argument('--headless')
+    ChromeOptions.add_argument('--no-sandbox')
+    ChromeOptions.add_argument('--disable-gpu')
+    ChromeOptions.add_argument('--disable-dev-shm-usage')
+    #browser = webdriver.Chrome(options=ChromeOptions, executable_path='/snap/bin/chromium.chromedriver')
+    browser = webdriver.Chrome(options=ChromeOptions)
     browser.implicitly_wait(6)
     browser.get(url)
 
@@ -124,6 +125,7 @@ def extract_article(browser: mechanicalsoup.StatefulBrowser, url: str) -> (Artic
     page = browser.get_current_page()
 
     script_data = page.select('script[type="application/ld+json"]')
+
     first_script_data = json.loads(script_data[1].text)
     second_script_data = json.loads(script_data[0].text)
 
