@@ -2,9 +2,10 @@ from datetime import datetime
 import json
 from time import sleep
 from selenium import webdriver
+from selenium.webdriver import ActionChains
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException, NoSuchElementException, ElementClickInterceptedException
 import mechanicalsoup
 from bs4 import BeautifulSoup
@@ -20,24 +21,24 @@ def extract_info_from_iframe(browser: webdriver, url: str) -> []:
     try:
         # open all other pages with comments
         while button := browser.find_element_by_css_selector("button[data-dot='strankovani/nacist_dalsi']"):
-            if button:
-                try:
-                    button.click()
-                except ElementClickInterceptedException:
-                    pass
+            try:
+                action = ActionChains(browser)
+                action.move_to_element(button).click().perform()
+            except ElementClickInterceptedException:
+                pass
             sleep(0.5)
     except NoSuchElementException:
         pass
 
     try:
         # open threads of subcomments
-        while button := browser.find_element_by_css_selector("button[data-dot='nacist_nove_podkomentare']"):
-            if button:
-                try:
-                    button.click()
-                except ElementClickInterceptedException:
-                    pass
-            sleep(0.5)
+        for button in browser.find_elements_by_css_selector("button[data-dot='nacist_nove_podkomentare']"):
+            try:
+                action = ActionChains(browser)
+                action.move_to_element(button).click().perform()
+            except ElementClickInterceptedException:
+                pass
+            sleep(0.3)
     except NoSuchElementException:
         pass
 
@@ -73,6 +74,7 @@ def retrieve_comments(browser_, url: str) -> []:
     """
     ChromeOptions = webdriver.ChromeOptions()
     #ChromeOptions.add_argument('--headless')
+    ChromeOptions.add_argument('start-maximized')
     browser = webdriver.Chrome(options=ChromeOptions, executable_path='/snap/bin/chromium.chromedriver')
     browser.implicitly_wait(6)
     browser.get(url)
@@ -87,6 +89,8 @@ def retrieve_comments(browser_, url: str) -> []:
             if "diskuze.seznam.cz" in iframe["src"]:
                 browser.get(iframe['src'])
                 return extract_info_from_iframe(browser, iframe['src'])
+
+    return []
 
 
 def retrieve_paragraphs(page) -> str:
