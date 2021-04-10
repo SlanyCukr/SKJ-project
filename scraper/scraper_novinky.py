@@ -7,7 +7,6 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException,
 import mechanicalsoup
 from bs4 import BeautifulSoup
 from tqdm import tqdm
-import chromedriver_binary
 
 from database.base_objects import Article, Comment
 from scraper.db_utils import save_to_db
