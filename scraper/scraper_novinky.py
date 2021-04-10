@@ -76,8 +76,8 @@ def retrieve_comments(browser_, url: str) -> []:
     ChromeOptions.add_argument('--no-sandbox')
     ChromeOptions.add_argument('--disable-gpu')
     ChromeOptions.add_argument('--disable-dev-shm-usage')
-    #browser = webdriver.Chrome(options=ChromeOptions, executable_path='/snap/bin/chromium.chromedriver')
-    browser = webdriver.Chrome(options=ChromeOptions)
+    browser = webdriver.Chrome(options=ChromeOptions, executable_path='/snap/bin/chromium.chromedriver')
+    #browser = webdriver.Chrome(options=ChromeOptions)
     browser.implicitly_wait(6)
     browser.get(url)
 
@@ -147,29 +147,26 @@ def extract_article(browser: mechanicalsoup.StatefulBrowser, url: str) -> (Artic
     return article, authors, comments
 
 
-if __name__ == '__main__':
+def run():
     browser = mechanicalsoup.StatefulBrowser()
-    browser.open(BASE_URL)
 
-    page = browser.get_current_page()
+    while True:
+        browser.open(BASE_URL)
 
-    # we will crawl these sites
-    articles = []
-    stalo_se_articles = page.select('div[data-dot="stalo_se"] a')
-    for article in stalo_se_articles:
-        # skip not article
-        if 'lastItem' in article['href']:
-            continue
+        page = browser.get_current_page()
 
-        articles.append(extract_article(browser, article['href']))
+        # we will crawl these sites
+        articles = []
+        stalo_se_articles = page.select('div[data-dot="stalo_se"] a')
+        for article in stalo_se_articles:
+            # skip not article
+            if 'lastItem' in article['href']:
+                continue
 
-    save_to_db(articles)
+            articles.append(extract_article(browser, article['href']))
 
-
-
-
+        save_to_db(articles)
 
 
-
-
-
+if __name__ == '__main__':
+    run()
