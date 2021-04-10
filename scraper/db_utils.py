@@ -9,6 +9,31 @@ Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
 
 
+def save_article_to_db(session, article: Article):
+    fetched_article = session.query(Article).filter_by(link=article.link).scalar()
+    if fetched_article is None:
+        session.add(article)
+        session.commit()
+        return article
+
+    return fetched_article
+
+
+def save_comments(session, comments: [Comment], article: Article):
+    for comment in comments:
+        fetched_comment = session.query(Comment).filter_by(text=comment.text, author=comment.author).scalar()
+        if fetched_comment is None:
+            comment.article = article
+            session.add(comment)
+            continue
+
+        if fetched_comment.reactions != comment.reactions:
+            fetched_comment.reactions = comment.reactions
+            session.add(fetched_comment)
+
+    session.commit()
+
+
 def save_to_db(articles: []):
     session = Session()
 
@@ -18,14 +43,14 @@ def save_to_db(articles: []):
         comments = data[2]
 
         # save article do db
-        session.add(article)
-        session.commit()
+        save_article_to_db(session, article)
 
         # save comments to db
-        for comment in comments:
+        save_comments(session, comments, article)
+        """for comment in comments:
             comment.article = article
         session.add_all(comments)
-        session.commit()
+        session.commit()"""
 
         # check if we already have author saved
         for author in authors:

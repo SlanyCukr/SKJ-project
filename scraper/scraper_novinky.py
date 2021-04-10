@@ -3,7 +3,7 @@ import json
 from time import sleep
 from selenium import webdriver
 from selenium.webdriver import ActionChains
-from selenium.common.exceptions import TimeoutException, NoSuchElementException, ElementClickInterceptedException
+from selenium.common.exceptions import TimeoutException, NoSuchElementException, ElementClickInterceptedException, StaleElementReferenceException
 import mechanicalsoup
 from bs4 import BeautifulSoup
 from tqdm import tqdm
@@ -22,7 +22,7 @@ def extract_info_from_iframe(browser: webdriver, url: str) -> []:
             try:
                 action = ActionChains(browser)
                 action.move_to_element(button).click().perform()
-            except ElementClickInterceptedException:
+            except ElementClickInterceptedException or StaleElementReferenceException:
                 pass
             sleep(0.5)
             button = browser.find_element_by_css_selector("button[data-dot='strankovani/nacist_dalsi']")
