@@ -29,12 +29,40 @@ class Author(SQLAlchemyObjectType):
         interfaces = (relay.Node, )
 
 
+class CountWithPercent(graphene.ObjectType):
+    count = graphene.Int()
+    percent = graphene.Int()
+
+
+class GraphValue(graphene.ObjectType):
+    first_value = graphene.Int()
+    second_value = graphene.Int()
+    date = graphene.Date()
+
+
+class NumberNamePair(graphene.ObjectType):
+    name = graphene.String()
+    number = graphene.Int()
+
+
 class Query(graphene.ObjectType):
     node = relay.Node.Field()
     # Allows sorting over multiple columns, by default over the primary key
     all_articles = SQLAlchemyConnectionField(Article.connection)
     # Disable sorting over this field
     all_authors = SQLAlchemyConnectionField(Author.connection, sort=None)
+
+    new_comments = graphene.List(CountWithPercent)
+    new_articles = graphene.List(CountWithPercent)
+    current_progress = graphene.List(graphene.Int) # do later
+    authors_count = graphene.Int()
+    latest_comment_increase = graphene.List(GraphValue)
+    categories = graphene.List(NumberNamePair)
+
+    def resolve_new_comments(self, info):
+
+
+
 
 
 schema = graphene.Schema(query=Query)

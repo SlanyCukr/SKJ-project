@@ -3,7 +3,7 @@ import json
 from time import sleep
 from selenium import webdriver
 from selenium.webdriver import ActionChains
-from selenium.common.exceptions import TimeoutException, NoSuchElementException, ElementClickInterceptedException, StaleElementReferenceException
+from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException, StaleElementReferenceException
 import mechanicalsoup
 from bs4 import BeautifulSoup
 from tqdm import tqdm
