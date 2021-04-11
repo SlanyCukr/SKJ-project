@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_graphql import GraphQLView
 
-from schema import schema, Article, ArticleAuthor, Comment, Author
-from db_utils import db_session
+from graphql_backend.schema import schema, Article, ArticleAuthor, Comment, Author
+from graphql_backend.db_utils import db_session
 
 app = Flask(__name__)
 app.debug = True
