@@ -1,9 +1,10 @@
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
+
 from database.base_objects import Article as ArticleModel, ArticleAuthor as ArticleAuthorModel, Author as AuthorModel,\
     Comment as CommentModel
-
+from graphql_backend.db_utils import get_comments
 
 class Article(SQLAlchemyObjectType):
     class Meta:
@@ -52,16 +53,19 @@ class Query(graphene.ObjectType):
     # Disable sorting over this field
     all_authors = SQLAlchemyConnectionField(Author.connection, sort=None)
 
-    new_comments = graphene.List(CountWithPercent)
-    new_articles = graphene.List(CountWithPercent)
-    current_progress = graphene.List(graphene.Int) # do later
+    new_comments = graphene.Field(CountWithPercent)
+    new_articles = graphene.Field(CountWithPercent)
+    current_progress = graphene.Int() # do later
     authors_count = graphene.Int()
     latest_comment_increase = graphene.List(GraphValue)
     categories = graphene.List(NumberNamePair)
 
     def resolve_new_comments(self, info):
+        today, day_old, all = get_comments()
 
+        percent = (today - day_old) / day_old
 
+        return CountWithPercent(all, percent * 100)
 
 
 
