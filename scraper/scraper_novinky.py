@@ -22,7 +22,7 @@ def extract_info_from_iframe(browser: webdriver, url: str) -> []:
             try:
                 action = ActionChains(browser)
                 action.move_to_element(button).click().perform()
-            except ElementClickInterceptedException or StaleElementReferenceException:
+            except (ElementClickInterceptedException, StaleElementReferenceException):
                 pass
             sleep(0.5)
             button = browser.find_element_by_css_selector("button[data-dot='strankovani/nacist_dalsi']")
@@ -35,7 +35,7 @@ def extract_info_from_iframe(browser: webdriver, url: str) -> []:
             try:
                 action = ActionChains(browser)
                 action.move_to_element(button).click().perform()
-            except ElementClickInterceptedException:
+            except (ElementClickInterceptedException, StaleElementReferenceException):
                 pass
             sleep(0.3)
     except NoSuchElementException:

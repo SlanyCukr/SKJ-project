@@ -43,7 +43,7 @@ def save_to_db(articles: []):
         comments = data[2]
 
         # save article do db
-        save_article_to_db(session, article)
+        article = save_article_to_db(session, article)
 
         # save comments to db
         save_comments(session, comments, article)
@@ -64,5 +64,6 @@ def save_to_db(articles: []):
                 author_id = (author_db.id,)
 
             # create linked object between author and article
-            session.add(ArticleAuthor(article_id=article.id, author_id=author_id[0]))
-            session.commit()
+            if not session.query(ArticleAuthor.id).filter(ArticleAuthor.article_id == article.id, ArticleAuthor.author_id == author_id[0]).first():
+                session.add(ArticleAuthor(article_id=article.id, author_id=author_id[0]))
+                session.commit()
