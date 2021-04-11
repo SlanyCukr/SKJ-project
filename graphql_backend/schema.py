@@ -4,7 +4,7 @@ from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
 
 from database.base_objects import Article as ArticleModel, ArticleAuthor as ArticleAuthorModel, Author as AuthorModel,\
     Comment as CommentModel
-from graphql_backend.db_utils import get_comments
+from graphql_backend.db_utils import get_comments, get_articles
 
 class Article(SQLAlchemyObjectType):
     class Meta:
@@ -55,7 +55,7 @@ class Query(graphene.ObjectType):
 
     new_comments = graphene.Field(CountWithPercent)
     new_articles = graphene.Field(CountWithPercent)
-    current_progress = graphene.Int() # do later
+    current_progress = graphene.Int()
     authors_count = graphene.Int()
     latest_comment_increase = graphene.List(GraphValue)
     categories = graphene.List(NumberNamePair)
@@ -67,6 +67,16 @@ class Query(graphene.ObjectType):
 
         return CountWithPercent(all, percent * 100)
 
+    def resolve_new_articles(self, info):
+        today, day_old, all = get_articles()
+
+        percent = (today - day_old) / day_old
+
+        return CountWithPercent(all, percent * 100)
+
+    def resolve_current_progress(self, info):
+        # TODO -> actually check progress of scraper
+        return 50
 
 
 schema = graphene.Schema(query=Query)
