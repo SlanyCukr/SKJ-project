@@ -21,3 +21,8 @@ def get_articles():
         all = connection.execute("SELECT COUNT(*) FROM article")
 
         return list(today)[0][0], list(day_old)[0][0], list(all)[0][0]
+
+
+def get_articles_count():
+    with engine.connect() as connection:
+        return list(connection.execute("SELECT COUNT(*) FROM article"))[0][0]

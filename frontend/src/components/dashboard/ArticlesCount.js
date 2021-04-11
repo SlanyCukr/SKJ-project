@@ -6,9 +6,22 @@ import {
   Typography
 } from '@material-ui/core';
 import { indigo } from '@material-ui/core/colors';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import InfoIcon from '@material-ui/icons/Info';
+import { useQuery, gql, fromError } from '@apollo/client';
 
-const TotalProfit = (props) => (
+const query = gql`
+query{
+  articlesCount
+}`;
+
+const ArticlesCount = (props) => {
+  const { loading, error, data } = useQuery(query);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+
+
+  return (
   <Card {...props}>
     <CardContent>
       <Grid
@@ -22,13 +35,13 @@ const TotalProfit = (props) => (
             gutterBottom
             variant="h6"
           >
-            TOTAL PROFIT
+            CELKOVÝ POČET ČLÁNKŮ
           </Typography>
           <Typography
             color="textPrimary"
             variant="h3"
           >
-            $23,200
+            {data.articlesCount}
           </Typography>
         </Grid>
         <Grid item>
@@ -39,12 +52,12 @@ const TotalProfit = (props) => (
               width: 56
             }}
           >
-            <AttachMoneyIcon />
+            <InfoIcon />
           </Avatar>
         </Grid>
       </Grid>
     </CardContent>
   </Card>
-);
+)};
 
-export default TotalProfit;
+export default ArticlesCount;

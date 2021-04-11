@@ -4,19 +4,21 @@ import {
   Container,
   Grid
 } from '@material-ui/core';
-import Budget from 'src/components/dashboard//Budget';
+import ReactDOM from 'react-dom';
+import NewArticles from 'src/components/dashboard/NewArticles';
 import LatestOrders from 'src/components/dashboard//LatestOrders';
 import LatestProducts from 'src/components/dashboard//LatestProducts';
 import Sales from 'src/components/dashboard//Sales';
 import TasksProgress from 'src/components/dashboard//TasksProgress';
-import TotalCustomers from 'src/components/dashboard//TotalCustomers';
-import TotalProfit from 'src/components/dashboard//TotalProfit';
+import NewComments from 'src/components/dashboard/NewComments';
+import ArticlesCount from 'src/components/dashboard/ArticlesCount';
 import TrafficByDevice from 'src/components/dashboard//TrafficByDevice';
 
-const Dashboard = () => (
+const Dashboard = () => {
+  return(
   <>
     <Helmet>
-      <title>Dashboard | Material Kit</title>
+      <title>SKJ projekt dashboard</title>
     </Helmet>
     <Box
       sx={{
@@ -37,7 +39,7 @@ const Dashboard = () => (
             xl={3}
             xs={12}
           >
-            <Budget />
+            <NewArticles />
           </Grid>
           <Grid
             item
@@ -46,7 +48,7 @@ const Dashboard = () => (
             xl={3}
             xs={12}
           >
-            <TotalCustomers />
+            <NewComments />
           </Grid>
           <Grid
             item
@@ -64,7 +66,7 @@ const Dashboard = () => (
             xl={3}
             xs={12}
           >
-            <TotalProfit sx={{ height: '100%' }} />
+            <ArticlesCount sx={{ height: '100%' }} />
           </Grid>
           <Grid
             item
@@ -106,6 +108,6 @@ const Dashboard = () => (
       </Container>
     </Box>
   </>
-);
+)};
 
 export default Dashboard;

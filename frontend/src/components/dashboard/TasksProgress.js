@@ -9,8 +9,20 @@ import {
 } from '@material-ui/core';
 import { orange } from '@material-ui/core/colors';
 import InsertChartIcon from '@material-ui/icons/InsertChartOutlined';
+import { useQuery, gql, fromError } from '@apollo/client';
 
-const TasksProgress = (props) => (
+const query = gql`
+query{
+  currentProgress
+}`;
+
+const TasksProgress = (props) => {
+  const { loading, error, data } = useQuery(query);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+
+  return(
   <Card
     sx={{ height: '100%' }}
     {...props}
@@ -27,13 +39,13 @@ const TasksProgress = (props) => (
             gutterBottom
             variant="h6"
           >
-            TASKS PROGRESS
+            PRŮBĚH SOUČASNÉHO SCRAPOVÁNÍ
           </Typography>
           <Typography
             color="textPrimary"
             variant="h3"
           >
-            75.5%
+            {data.currentProgress}%
           </Typography>
         </Grid>
         <Grid item>
@@ -50,12 +62,12 @@ const TasksProgress = (props) => (
       </Grid>
       <Box sx={{ pt: 3 }}>
         <LinearProgress
-          value={75.5}
+          value={data.currentProgress}
           variant="determinate"
         />
       </Box>
     </CardContent>
   </Card>
-);
+)};
 
 export default TasksProgress;
