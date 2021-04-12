@@ -41,7 +41,7 @@ const ArticleCategories = (props) => {
     colors.purple[600]
   ];
 
-  let devices = [];
+  let additionalCategoriesInfo = [];
 
     var valuesSum = 0;
     for (var i = 0; i < data.categories.length; i++){
@@ -57,7 +57,7 @@ const ArticleCategories = (props) => {
       values.push(number);
       labels.push(label);
 
-      devices.push({title: label, value: Math.round((number / valuesSum) * 100), color: colors_[i]});
+      additionalCategoriesInfo.push({title: label, value: Math.round((number / valuesSum) * 100), color: colors_[i]});
     }
 
   const graphData = {
@@ -118,7 +118,7 @@ const ArticleCategories = (props) => {
             pt: 2
           }}
         >
-          {devices.map(({
+          {additionalCategoriesInfo.map(({
             color,
             title,
             value
