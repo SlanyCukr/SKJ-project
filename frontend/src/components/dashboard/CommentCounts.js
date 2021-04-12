@@ -1,7 +1,6 @@
 import { Bar } from 'react-chartjs-2';
 import {
   Box,
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -9,26 +8,42 @@ import {
   useTheme,
   colors
 } from '@material-ui/core';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import { useQuery, gql, fromError } from '@apollo/client';
 
-const Sales = (props) => {
+const query = gql`
+query{
+  latestCommentsGraph{
+    value,
+    date
+  }
+}`;
+
+const CommentCounts = (props) => {
   const theme = useTheme();
 
-  const data = {
+  const { loading, error, data } = useQuery(query);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+
+  var values = []
+  var labels = []
+  for (var i = 0; i < data.latestCommentsGraph.length; i++){
+    values.push(data.latestCommentsGraph[i].value);
+    var parsedDate = new Date(data.latestCommentsGraph[i].date);
+    console.log(parsedDate);
+    labels.push(parsedDate.getUTCDate() + "." + (parsedDate.getUTCMonth() + 1));
+  }
+
+  const graphData = {
     datasets: [
       {
         backgroundColor: colors.indigo[500],
-        data: [18, 5, 19, 27, 29, 19, 20],
-        label: 'This year'
-      },
-      {
-        backgroundColor: colors.grey[200],
-        data: [11, 20, 12, 29, 30, 25, 13],
-        label: 'Last year'
+        data: values,
+        label: 'Počet komentářů'
       }
     ],
-    labels: ['1 Aug', '2 Aug', '3 Aug', '4 Aug', '5 Aug', '6 Aug']
+    labels: labels
   };
 
   const options = {
@@ -89,7 +104,7 @@ const Sales = (props) => {
   return (
     <Card {...props}>
       <CardHeader
-        title="Nejnovější komentáře"
+        title="Počty komentářů"
       />
       <Divider />
       <CardContent>
@@ -100,7 +115,7 @@ const Sales = (props) => {
           }}
         >
           <Bar
-            data={data}
+            data={graphData}
             options={options}
           />
         </Box>
@@ -118,4 +133,4 @@ const Sales = (props) => {
   );
 };
 
-export default Sales;
+export default CommentCounts;

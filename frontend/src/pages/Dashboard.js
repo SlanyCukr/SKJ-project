@@ -8,7 +8,7 @@ import ReactDOM from 'react-dom';
 import NewArticles from 'src/components/dashboard/NewArticles';
 import LatestOrders from 'src/components/dashboard//LatestOrders';
 import LatestProducts from 'src/components/dashboard//LatestProducts';
-import Sales from 'src/components/dashboard//Sales';
+import CommentCounts from 'src/components/dashboard/CommentCounts';
 import TasksProgress from 'src/components/dashboard//TasksProgress';
 import NewComments from 'src/components/dashboard/NewComments';
 import AuthorsCount from 'src/components/dashboard/AuthorsCount';
@@ -75,7 +75,7 @@ const Dashboard = () => {
             xl={9}
             xs={12}
           >
-            <Sales />
+            <CommentCounts />
           </Grid>
           <Grid
             item

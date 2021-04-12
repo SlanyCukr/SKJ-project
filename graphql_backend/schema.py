@@ -1,10 +1,11 @@
+import datetime
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
 
 from database.base_objects import Article as ArticleModel, ArticleAuthor as ArticleAuthorModel, Author as AuthorModel,\
     Comment as CommentModel
-from graphql_backend.db_utils import get_comments, get_articles, get_authors_count, get_progress
+from graphql_backend.db_utils import get_comments, get_articles, get_authors_count, get_progress, get_grouped_comments
 
 
 class Article(SQLAlchemyObjectType):
@@ -37,8 +38,7 @@ class CountWithPercent(graphene.ObjectType):
 
 
 class GraphValue(graphene.ObjectType):
-    first_value = graphene.Int()
-    second_value = graphene.Int()
+    value = graphene.Int()
     date = graphene.Date()
 
 
@@ -58,7 +58,7 @@ class Query(graphene.ObjectType):
     new_articles = graphene.Field(CountWithPercent)
     current_progress = graphene.Int()
     authors_count = graphene.Int()
-    latest_comment_increase = graphene.List(GraphValue)
+    latest_comments_graph = graphene.List(GraphValue)
     categories = graphene.List(NumberNamePair)
 
     def resolve_new_comments(self, info):
@@ -81,6 +81,9 @@ class Query(graphene.ObjectType):
 
     def resolve_authors_count(self, info):
         return get_authors_count()
+
+    def resolve_latest_comments_graph(self, info):
+        return [GraphValue(x[0], datetime.datetime.strptime(x[1], "%Y-%m-%d")) for x in get_grouped_comments()]
 
 
 schema = graphene.Schema(query=Query)

@@ -31,3 +31,8 @@ def get_authors_count():
 def get_progress():
     with engine.connect() as connection:
         return list(connection.execute("SELECT value FROM progress"))[0][0]
+
+
+def get_grouped_comments():
+    with engine.connect() as connection:
+        return list(connection.execute("SELECT COUNT(*) as pocet, date(created_on) FROM comment GROUP BY date(created_on) ORDER BY date(created_on) ASC LIMIT 7"))
