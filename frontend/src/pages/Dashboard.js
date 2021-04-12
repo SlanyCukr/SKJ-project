@@ -11,7 +11,7 @@ import LatestProducts from 'src/components/dashboard//LatestProducts';
 import Sales from 'src/components/dashboard//Sales';
 import TasksProgress from 'src/components/dashboard//TasksProgress';
 import NewComments from 'src/components/dashboard/NewComments';
-import ArticlesCount from 'src/components/dashboard/ArticlesCount';
+import AuthorsCount from 'src/components/dashboard/AuthorsCount';
 import TrafficByDevice from 'src/components/dashboard//TrafficByDevice';
 
 const Dashboard = () => {
@@ -66,7 +66,7 @@ const Dashboard = () => {
             xl={3}
             xs={12}
           >
-            <ArticlesCount sx={{ height: '100%' }} />
+            <AuthorsCount sx={{ height: '100%' }} />
           </Grid>
           <Grid
             item

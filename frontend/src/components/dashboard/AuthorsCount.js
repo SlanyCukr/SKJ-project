@@ -11,10 +11,10 @@ import { useQuery, gql, fromError } from '@apollo/client';
 
 const query = gql`
 query{
-  articlesCount
+  authorsCount
 }`;
 
-const ArticlesCount = (props) => {
+const AuthorsCount = (props) => {
   const { loading, error, data } = useQuery(query);
 
   if (loading) return <p>Loading...</p>;
@@ -35,7 +35,7 @@ const ArticlesCount = (props) => {
             gutterBottom
             variant="h6"
           >
-            CELKOVÝ POČET ČLÁNKŮ
+            CELKOVÝ POČET AUTORŮ
           </Typography>
           <Typography
             color="textPrimary"
@@ -60,4 +60,4 @@ const ArticlesCount = (props) => {
   </Card>
 )};
 
-export default ArticlesCount;
+export default AuthorsCount;
