@@ -89,16 +89,7 @@ const Sales = (props) => {
   return (
     <Card {...props}>
       <CardHeader
-        action={(
-          <Button
-            endIcon={<ArrowDropDownIcon />}
-            size="small"
-            variant="text"
-          >
-            Last 7 days
-          </Button>
-        )}
-        title="Latest Sales"
+        title="Nejnovější komentáře"
       />
       <Divider />
       <CardContent>
@@ -122,14 +113,6 @@ const Sales = (props) => {
           p: 2
         }}
       >
-        <Button
-          color="primary"
-          endIcon={<ArrowRightIcon />}
-          size="small"
-          variant="text"
-        >
-          Overview
-        </Button>
       </Box>
     </Card>
   );
