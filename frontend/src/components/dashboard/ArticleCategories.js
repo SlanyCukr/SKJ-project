@@ -9,9 +9,6 @@ import {
   colors,
   useTheme
 } from '@material-ui/core';
-import LaptopMacIcon from '@material-ui/icons/LaptopMac';
-import PhoneIcon from '@material-ui/icons/Phone';
-import TabletIcon from '@material-ui/icons/Tablet';
 import { useQuery, gql, fromError } from '@apollo/client';
 
 const query = gql`

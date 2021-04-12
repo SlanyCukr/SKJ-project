@@ -69,10 +69,11 @@ const Dashboard = () => {
           </Grid>
           <Grid
             item
-            lg={8}
-            md={12}
-            xl={9}
-            xs={12}
+            
+            lg={12}
+            sm={24}
+            xl={12}
+            xs={48}
           >
             <CommentCounts />
           </Grid>
