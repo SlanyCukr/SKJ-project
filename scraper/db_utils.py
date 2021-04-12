@@ -34,17 +34,8 @@ def save_comments(session, comments: [Comment], article: Article):
     session.commit()
 
 
-def save_to_db(article_data, progress: int):
+def save_to_db(article_data):
     session = Session()
-
-    # first update progress
-    progress_object = session.query(Progress).scalar()
-    if not progress_object:
-        session.add(Progress(value=progress))
-    else:
-        progress_object.value = progress
-        session.add(progress_object)
-    session.commit()
 
     article = article_data[0]
     authors = article_data[1]
@@ -71,3 +62,15 @@ def save_to_db(article_data, progress: int):
         if not session.query(ArticleAuthor.id).filter(ArticleAuthor.article_id == article.id, ArticleAuthor.author_id == author_id[0]).first():
             session.add(ArticleAuthor(article_id=article.id, author_id=author_id[0]))
             session.commit()
+
+
+def update_progress(progress: int):
+    session = Session()
+
+    progress_object = session.query(Progress).scalar()
+    if not progress_object:
+        session.add(Progress(value=progress))
+    else:
+        progress_object.value = progress
+        session.add(progress_object)
+    session.commit()

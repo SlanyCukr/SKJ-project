@@ -10,7 +10,7 @@ from tqdm import tqdm
 import os
 
 from database.base_objects import Article, Comment
-from scraper.db_utils import save_to_db
+from scraper.db_utils import save_to_db, update_progress
 
 BASE_URL = "https://novinky.cz/stalo-se"
 
@@ -165,12 +165,15 @@ def run():
         # we will crawl these sites
         stalo_se_articles = page.select('div[data-dot="stalo_se"] a')
         for i in range(len(stalo_se_articles)):
+            progress = int((i + 1) / (len(stalo_se_articles)) * 100)
+
             # skip not article
             if 'lastItem' in stalo_se_articles[i]['href']:
+                update_progress(progress)
                 continue
 
-            progress = int((i + 1) / (len(stalo_se_articles)) * 100)
-            save_to_db(extract_article(browser, stalo_se_articles[i]['href']), progress)
+            save_to_db(extract_article(browser, stalo_se_articles[i]['href']))
+            update_progress(progress)
 
         print("---------------------------------------")
         print("Sleeping before next crawling cycle...")
