@@ -7,11 +7,24 @@ from selenium.common.exceptions import NoSuchElementException, ElementClickInter
 import mechanicalsoup
 from bs4 import BeautifulSoup
 from tqdm import tqdm
+import os
 
 from database.base_objects import Article, Comment
 from scraper.db_utils import save_to_db
 
 BASE_URL = "https://novinky.cz/stalo-se"
+
+
+def get_browser():
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    if os.uname().nodename == 'raspberrypi':
+        return webdriver.Chrome(options=chrome_options)
+
+    return webdriver.Chrome(options=chrome_options, executable_path='/snap/bin/chromium.chromedriver')
 
 
 def extract_info_from_iframe(browser: webdriver, url: str) -> []:
@@ -71,13 +84,7 @@ def retrieve_comments(browser_, url: str) -> []:
     :param url: URL to retrieve comments from
     :return: List of Comment objects
     """
-    ChromeOptions = webdriver.ChromeOptions()
-    ChromeOptions.add_argument('--headless')
-    ChromeOptions.add_argument('--no-sandbox')
-    ChromeOptions.add_argument('--disable-gpu')
-    ChromeOptions.add_argument('--disable-dev-shm-usage')
-    browser = webdriver.Chrome(options=ChromeOptions, executable_path='/snap/bin/chromium.chromedriver')
-    #browser = webdriver.Chrome(options=ChromeOptions)
+    browser = get_browser()
     browser.implicitly_wait(6)
     browser.get(url)
 
