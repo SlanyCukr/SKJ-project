@@ -163,16 +163,18 @@ def run():
         page = browser.get_current_page()
 
         # we will crawl these sites
-        articles = []
         stalo_se_articles = page.select('div[data-dot="stalo_se"] a')
         for article in stalo_se_articles:
             # skip not article
             if 'lastItem' in article['href']:
                 continue
 
-            articles.append(extract_article(browser, article['href']))
+            save_to_db(extract_article(browser, article['href']))
 
-        save_to_db(articles)
+        print("---------------------------------------")
+        print("Sleeping before next crawling cycle...")
+        print("---------------------------------------")
+        sleep(50)
 
 
 if __name__ == '__main__':

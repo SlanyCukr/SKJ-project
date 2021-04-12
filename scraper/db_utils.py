@@ -34,36 +34,31 @@ def save_comments(session, comments: [Comment], article: Article):
     session.commit()
 
 
-def save_to_db(articles: []):
+def save_to_db(article_data):
     session = Session()
 
-    for data in articles:
-        article = data[0]
-        authors = data[1]
-        comments = data[2]
+    article = article_data[0]
+    authors = article_data[1]
+    comments = article_data[2]
 
-        # save article do db
-        article = save_article_to_db(session, article)
+    # save article do db
+    article = save_article_to_db(session, article)
 
-        # save comments to db
-        save_comments(session, comments, article)
-        """for comment in comments:
-            comment.article = article
-        session.add_all(comments)
-        session.commit()"""
+    # save comments to db
+    save_comments(session, comments, article)
 
-        # check if we already have author saved
-        for author in authors:
-            author_id = session.query(Author.id).filter(Author.name == author).first()
+    # check if we already have author saved
+    for author in authors:
+        author_id = session.query(Author.id).filter(Author.name == author).first()
 
-            # if not, create that author
-            if not author_id:
-                author_db = Author(name=author)
-                session.add(author_db)
-                session.commit()
-                author_id = (author_db.id,)
+        # if not, create that author
+        if not author_id:
+            author_db = Author(name=author)
+            session.add(author_db)
+            session.commit()
+            author_id = (author_db.id,)
 
-            # create linked object between author and article
-            if not session.query(ArticleAuthor.id).filter(ArticleAuthor.article_id == article.id, ArticleAuthor.author_id == author_id[0]).first():
-                session.add(ArticleAuthor(article_id=article.id, author_id=author_id[0]))
-                session.commit()
+        # create linked object between author and article
+        if not session.query(ArticleAuthor.id).filter(ArticleAuthor.article_id == article.id, ArticleAuthor.author_id == author_id[0]).first():
+            session.add(ArticleAuthor(article_id=article.id, author_id=author_id[0]))
+            session.commit()
