@@ -5,7 +5,8 @@ from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
 
 from database.base_objects import Article as ArticleModel, ArticleAuthor as ArticleAuthorModel, Author as AuthorModel,\
     Comment as CommentModel
-from graphql_backend.db_utils import get_comments, get_articles, get_authors_count, get_progress, get_grouped_comments
+from graphql_backend.db_utils import get_comments, get_articles, get_authors_count, get_progress, get_grouped_comments,\
+    get_categories
 
 
 class Article(SQLAlchemyObjectType):
@@ -84,6 +85,9 @@ class Query(graphene.ObjectType):
 
     def resolve_latest_comments_graph(self, info):
         return [GraphValue(x[0], datetime.datetime.strptime(x[1], "%Y-%m-%d")) for x in get_grouped_comments()]
+
+    def resolve_categories(self, info):
+        return [NumberNamePair(x[0], x[1]) for x in get_categories()]
 
 
 schema = graphene.Schema(query=Query)

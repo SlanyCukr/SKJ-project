@@ -4,7 +4,6 @@ import {
   Container,
   Grid
 } from '@material-ui/core';
-import ReactDOM from 'react-dom';
 import NewArticles from 'src/components/dashboard/NewArticles';
 import LatestOrders from 'src/components/dashboard//LatestOrders';
 import LatestProducts from 'src/components/dashboard//LatestProducts';
@@ -12,7 +11,7 @@ import CommentCounts from 'src/components/dashboard/CommentCounts';
 import TasksProgress from 'src/components/dashboard//TasksProgress';
 import NewComments from 'src/components/dashboard/NewComments';
 import AuthorsCount from 'src/components/dashboard/AuthorsCount';
-import TrafficByDevice from 'src/components/dashboard//TrafficByDevice';
+import ArticleCategories from 'src/components/dashboard/ArticleCategories';
 
 const Dashboard = () => {
   return(
@@ -79,12 +78,12 @@ const Dashboard = () => {
           </Grid>
           <Grid
             item
-            lg={4}
-            md={6}
-            xl={3}
+            lg={8}
+            md={12}
+            xl={9}
             xs={12}
           >
-            <TrafficByDevice sx={{ height: '100%' }} />
+            <ArticleCategories sx={{ height: '100%' }} />
           </Grid>
           <Grid
             item

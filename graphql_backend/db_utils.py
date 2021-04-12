@@ -36,3 +36,8 @@ def get_progress():
 def get_grouped_comments():
     with engine.connect() as connection:
         return list(connection.execute("SELECT COUNT(*) as pocet, date(created_on) FROM comment GROUP BY date(created_on) ORDER BY date(created_on) ASC LIMIT 7"))
+
+
+def get_categories():
+    with engine.connect() as connection:
+        return list(connection.execute("SELECT category, COUNT(*) as pocet FROM article GROUP BY category ORDER BY COUNT(*) DESC"))

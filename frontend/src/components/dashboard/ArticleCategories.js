@@ -12,25 +12,65 @@ import {
 import LaptopMacIcon from '@material-ui/icons/LaptopMac';
 import PhoneIcon from '@material-ui/icons/Phone';
 import TabletIcon from '@material-ui/icons/Tablet';
+import { useQuery, gql, fromError } from '@apollo/client';
 
-const TrafficByDevice = (props) => {
+const query = gql`
+query{
+  categories{
+    name,
+    number
+  }
+}`;
+
+const ArticleCategories = (props) => {
   const theme = useTheme();
 
-  const data = {
+  const { loading, error, data } = useQuery(query);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+
+  let colors_ = [
+    colors.indigo[500],
+    colors.red[600],
+    colors.orange[600],
+    colors.blue[600],
+    colors.green[600],
+    colors.cyan[600],
+    colors.pink[600],
+    colors.purple[600]
+  ];
+
+  let devices = [];
+
+    var valuesSum = 0;
+    for (var i = 0; i < data.categories.length; i++){
+      valuesSum += data.categories[i].number;
+    }
+
+    var values = []
+    var labels = []
+    for (var i = 0; i < data.categories.length; i++){
+      var number = data.categories[i].number;
+      var label = data.categories[i].name;
+
+      values.push(number);
+      labels.push(label);
+
+      devices.push({title: label, value: Math.round((number / valuesSum) * 100), color: colors_[i]});
+    }
+
+  const graphData = {
     datasets: [
       {
-        data: [63, 15, 22],
-        backgroundColor: [
-          colors.indigo[500],
-          colors.red[600],
-          colors.orange[600]
-        ],
+        data: values,
+        backgroundColor: colors_,
         borderWidth: 8,
         borderColor: colors.common.white,
         hoverBorderColor: colors.common.white
       }
     ],
-    labels: ['Desktop', 'Tablet', 'Mobile']
+    labels: labels
   };
 
   const options = {
@@ -53,32 +93,11 @@ const TrafficByDevice = (props) => {
       mode: 'index',
       titleFontColor: theme.palette.text.primary
     }
-  };
-
-  const devices = [
-    {
-      title: 'Desktop',
-      value: 63,
-      icon: LaptopMacIcon,
-      color: colors.indigo[500]
-    },
-    {
-      title: 'Tablet',
-      value: 15,
-      icon: TabletIcon,
-      color: colors.red[600]
-    },
-    {
-      title: 'Mobile',
-      value: 23,
-      icon: PhoneIcon,
-      color: colors.orange[600]
-    }
-  ];
+  };  
 
   return (
     <Card {...props}>
-      <CardHeader title="Traffic by Device" />
+      <CardHeader title="Kategorie článků" />
       <Divider />
       <CardContent>
         <Box
@@ -88,7 +107,7 @@ const TrafficByDevice = (props) => {
           }}
         >
           <Doughnut
-            data={data}
+            data={graphData}
             options={options}
           />
         </Box>
@@ -101,7 +120,6 @@ const TrafficByDevice = (props) => {
         >
           {devices.map(({
             color,
-            icon: Icon,
             title,
             value
           }) => (
@@ -112,7 +130,6 @@ const TrafficByDevice = (props) => {
                 textAlign: 'center'
               }}
             >
-              <Icon color="action" />
               <Typography
                 color="textPrimary"
                 variant="body1"
@@ -121,7 +138,7 @@ const TrafficByDevice = (props) => {
               </Typography>
               <Typography
                 style={{ color }}
-                variant="h2"
+                variant="h5"
               >
                 {value}
                 %
@@ -134,4 +151,4 @@ const TrafficByDevice = (props) => {
   );
 };
 
-export default TrafficByDevice;
+export default ArticleCategories;
