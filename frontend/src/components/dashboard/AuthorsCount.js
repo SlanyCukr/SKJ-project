@@ -41,7 +41,7 @@ const AuthorsCount = (props) => {
             color="textPrimary"
             variant="h3"
           >
-            {data.articlesCount}
+            {data.authorsCount}
           </Typography>
         </Grid>
         <Grid item>
