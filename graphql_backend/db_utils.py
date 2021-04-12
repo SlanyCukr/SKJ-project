@@ -26,3 +26,8 @@ def get_articles():
 def get_articles_count():
     with engine.connect() as connection:
         return list(connection.execute("SELECT COUNT(*) FROM article"))[0][0]
+
+
+def get_progress():
+    with engine.connect() as connection:
+        return list(connection.execute("SELECT value FROM progress"))[0][0]
