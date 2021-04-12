@@ -50,3 +50,9 @@ class Comment(Base):
     article = relationship("Article", backref=backref("comment_article", lazy=True))
     article_id = Column(Integer, ForeignKey("article.id"), nullable=False)
     created_on = Column(DateTime, server_default=func.now())
+
+
+class Progress(Base):
+    __tablename__ = 'progress'
+    id = Column(Integer, primary_key=True)
+    value = Column(Integer)

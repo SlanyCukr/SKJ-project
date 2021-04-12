@@ -6,7 +6,7 @@ from database.base_objects import *
 engine = create_engine("sqlite:///database/database.db")
 Session = sessionmaker(bind=engine)
 #Base.metadata.drop_all(engine)
-#Base.metadata.create_all(engine)
+Base.metadata.create_all(engine)
 
 
 def save_article_to_db(session, article: Article):
@@ -34,8 +34,17 @@ def save_comments(session, comments: [Comment], article: Article):
     session.commit()
 
 
-def save_to_db(article_data):
+def save_to_db(article_data, progress: int):
     session = Session()
+
+    # first update progress
+    progress_object = session.query(Progress).scalar()
+    if not progress_object:
+        session.add(Progress(value=progress))
+    else:
+        progress_object.value = progress
+        session.add(progress_object)
+    session.commit()
 
     article = article_data[0]
     authors = article_data[1]

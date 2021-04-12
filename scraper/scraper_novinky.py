@@ -164,12 +164,13 @@ def run():
 
         # we will crawl these sites
         stalo_se_articles = page.select('div[data-dot="stalo_se"] a')
-        for article in stalo_se_articles:
+        for i in range(len(stalo_se_articles)):
             # skip not article
-            if 'lastItem' in article['href']:
+            if 'lastItem' in stalo_se_articles[i]['href']:
                 continue
 
-            save_to_db(extract_article(browser, article['href']))
+            progress = int((i + 1) / (len(stalo_se_articles)) * 100)
+            save_to_db(extract_article(browser, stalo_se_articles[i]['href']), progress)
 
         print("---------------------------------------")
         print("Sleeping before next crawling cycle...")
