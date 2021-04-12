@@ -27,7 +27,7 @@ def get_browser():
     return webdriver.Chrome(options=chrome_options, executable_path='/snap/bin/chromium.chromedriver')
 
 
-def extract_info_from_iframe(browser: webdriver, url: str) -> []:
+def extract_info_from_iframe(browser: webdriver) -> []:
     try:
         # open all other pages with comments
         button = browser.find_element_by_css_selector("button[data-dot='strankovani/nacist_dalsi']")
@@ -97,7 +97,7 @@ def retrieve_comments(browser_, url: str) -> []:
         if "src" in iframe.attrs:
             if "diskuze.seznam.cz" in iframe["src"]:
                 browser.get(iframe['src'])
-                return extract_info_from_iframe(browser, iframe['src'])
+                return extract_info_from_iframe(browser)
 
     return []
 
