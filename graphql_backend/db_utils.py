@@ -52,3 +52,8 @@ def get_latest_article_time(author_id):
     with engine.connect() as connection:
         # don't worry about sql injection, because user can't pass data to this app
         return list(connection.execute("SELECT MAX(article.created_on) FROM article JOIN article_author ON article_author.article_id = article.id WHERE author_id = " + str(author_id)))[0][0]
+
+
+def get_newest_articles():
+    with engine.connect() as connection:
+        return list(connection.execute("SELECT link, header, category, created_on, (SELECT COUNT(*) FROM comment WHERE comment.article_id = article.id) FROM article ORDER BY created_on DESC LIMIT 7"))

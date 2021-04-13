@@ -5,7 +5,7 @@ import {
   Grid
 } from '@material-ui/core';
 import NewArticles from 'src/components/dashboard/NewArticles';
-import LatestOrders from 'src/components/dashboard//LatestOrders';
+import NewestArticles from 'src/components/dashboard/NewestArticles';
 import MostFrequentAuthors from 'src/components/dashboard/MostFrequentAuthors';
 import CommentCounts from 'src/components/dashboard/CommentCounts';
 import TasksProgress from 'src/components/dashboard//TasksProgress';
@@ -102,7 +102,7 @@ const Dashboard = () => {
             xl={9}
             xs={12}
           >
-            <LatestOrders />
+            <NewestArticles />
           </Grid>
         </Grid>
       </Container>
