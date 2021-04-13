@@ -81,6 +81,8 @@ class Query(graphene.ObjectType):
     def resolve_new_comments(self, info):
         today, day_old, all = get_comments()
 
+        if day_old == 0:
+            return CountWithPercent(all, 100)
         percent = (today - day_old) / day_old
 
         return CountWithPercent(all, percent * 100)
@@ -88,6 +90,8 @@ class Query(graphene.ObjectType):
     def resolve_new_articles(self, info):
         today, day_old, all = get_articles()
 
+        if day_old == 0:
+            return CountWithPercent(all, 100)
         percent = (today - day_old) / day_old
 
         return CountWithPercent(all, percent * 100)

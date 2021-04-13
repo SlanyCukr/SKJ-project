@@ -17,7 +17,7 @@ query{
 }`;
 
 const TasksProgress = (props) => {
-  const { loading, error, data } = useQuery(query);
+  const { loading, error, data } = useQuery(query, {pollInterval: 2000});
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
