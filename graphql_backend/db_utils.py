@@ -33,9 +33,11 @@ def get_progress():
         return list(connection.execute("SELECT value FROM progress"))[0][0]
 
 
-def get_grouped_comments():
+def get_grouped_graph_data():
     with engine.connect() as connection:
-        return list(connection.execute("SELECT COUNT(*) as pocet, date(created_on) FROM comment GROUP BY date(created_on) ORDER BY date(created_on) ASC LIMIT 7"))
+        comment_counts = list(connection.execute("SELECT COUNT(*) as pocet, date(created_on) FROM comment GROUP BY date(created_on) ORDER BY date(created_on) ASC LIMIT 7"))
+        article_counts = list(connection.execute("SELECT COUNT(*) as pocet, date(created_on) FROM article GROUP BY date(created_on) ORDER BY date(created_on) ASC LIMIT 7"))
+        return comment_counts, article_counts
 
 
 def get_categories():

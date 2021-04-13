@@ -5,7 +5,7 @@ from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
 
 from database.base_objects import Article as ArticleModel, ArticleAuthor as ArticleAuthorModel, Author as AuthorModel,\
     Comment as CommentModel
-from graphql_backend.db_utils import get_comments, get_articles, get_authors_count, get_progress, get_grouped_comments,\
+from graphql_backend.db_utils import get_comments, get_articles, get_authors_count, get_progress, get_grouped_graph_data,\
     get_categories, get_most_frequent_authors, get_latest_article_time, get_newest_articles
 
 
@@ -38,8 +38,9 @@ class CountWithPercent(graphene.ObjectType):
     percent = graphene.Int()
 
 
-class GraphValue(graphene.ObjectType):
-    value = graphene.Int()
+class GraphValues(graphene.ObjectType):
+    value1 = graphene.Int()
+    value2 = graphene.Int()
     date = graphene.Date()
 
 
@@ -72,7 +73,7 @@ class Query(graphene.ObjectType):
     new_articles = graphene.Field(CountWithPercent)
     current_progress = graphene.Int()
     authors_count = graphene.Int()
-    latest_comments_graph = graphene.List(GraphValue)
+    graph_data = graphene.List(GraphValues)
     categories = graphene.List(NumberNamePair)
     most_frequent_authors = graphene.List(StringDateTimeTuple)
     newest_articles = graphene.List(ArticleInfo)
@@ -97,8 +98,12 @@ class Query(graphene.ObjectType):
     def resolve_authors_count(self, info):
         return get_authors_count()
 
-    def resolve_latest_comments_graph(self, info):
-        return [GraphValue(x[0], datetime.datetime.strptime(x[1], "%Y-%m-%d")) for x in get_grouped_comments()]
+    def resolve_graph_data(self, info):
+        graph_values = []
+        comment_counts, article_counts = get_grouped_graph_data()
+        for i in range(len(comment_counts)):
+            graph_values.append(GraphValues(comment_counts[i][0], article_counts[i][0], datetime.datetime.strptime(article_counts[i][1], "%Y-%m-%d")))
+        return graph_values
 
     def resolve_categories(self, info):
         return [NumberNamePair(x[0], x[1]) for x in get_categories()]

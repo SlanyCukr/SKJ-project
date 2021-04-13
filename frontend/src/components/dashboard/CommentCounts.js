@@ -12,8 +12,9 @@ import { useQuery, gql, fromError } from '@apollo/client';
 
 const query = gql`
 query{
-  latestCommentsGraph{
-    value,
+  graphData{
+    value1,
+    value2,
     date
   }
 }`;
@@ -26,12 +27,13 @@ const CommentCounts = (props) => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
-  var values = []
-  var labels = []
-  for (var i = 0; i < data.latestCommentsGraph.length; i++){
-    values.push(data.latestCommentsGraph[i].value);
-    var parsedDate = new Date(data.latestCommentsGraph[i].date);
-    console.log(parsedDate);
+  var values1 = [];
+  var values2 = [];
+  var labels = [];
+  for (var i = 0; i < data.graphData.length; i++){
+    values1.push(data.graphData[i].value1);
+    values2.push(data.graphData[i].value2);
+    var parsedDate = new Date(data.graphData[i].date);
     labels.push(parsedDate.getUTCDate() + "." + (parsedDate.getUTCMonth() + 1));
   }
 
@@ -39,8 +41,15 @@ const CommentCounts = (props) => {
     datasets: [
       {
         backgroundColor: colors.indigo[500],
-        data: values,
-        label: 'Počet komentářů'
+        data: values1,
+        label: 'Počet komentářů',
+        yAxisID: 'A',
+      },
+      {
+        backgroundColor: colors.red[500],
+        data: values2,
+        label: 'Počet článků',
+        yAxisID: 'B',
       }
     ],
     labels: labels
@@ -71,6 +80,25 @@ const CommentCounts = (props) => {
       ],
       yAxes: [
         {
+          id: "A",
+          ticks: {
+            fontColor: theme.palette.text.secondary,
+            beginAtZero: true,
+            min: 0
+          },
+          gridLines: {
+            borderDash: [2],
+            borderDashOffset: [2],
+            color: theme.palette.divider,
+            drawBorder: false,
+            zeroLineBorderDash: [2],
+            zeroLineBorderDashOffset: [2],
+            zeroLineColor: theme.palette.divider
+          }
+        },
+        {
+          id: "B",
+          position: "right",
           ticks: {
             fontColor: theme.palette.text.secondary,
             beginAtZero: true,
