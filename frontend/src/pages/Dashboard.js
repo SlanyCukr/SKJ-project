@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core';
 import NewArticles from 'src/components/dashboard/NewArticles';
 import LatestOrders from 'src/components/dashboard//LatestOrders';
-import NewestAuthors from 'src/components/dashboard/NewestAuthors';
+import MostFrequentAuthors from 'src/components/dashboard/MostFrequentAuthors';
 import CommentCounts from 'src/components/dashboard/CommentCounts';
 import TasksProgress from 'src/components/dashboard//TasksProgress';
 import NewComments from 'src/components/dashboard/NewComments';
@@ -93,7 +93,7 @@ const Dashboard = () => {
             xl={3}
             xs={12}
           >
-            <NewestAuthors sx={{ height: '100%' }} />
+            <MostFrequentAuthors sx={{ height: '100%' }} />
           </Grid>
           <Grid
             item

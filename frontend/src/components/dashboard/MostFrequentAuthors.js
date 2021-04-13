@@ -17,7 +17,7 @@ import { useQuery, gql, fromError } from '@apollo/client';
 
 const query = gql`
 query{
-  latestAuthors{
+  mostFrequentAuthors{
     value,
     date
   }
@@ -40,22 +40,22 @@ function getCzechDateRepresentation(date){
   return "před " + Math.round(delta / 525960) + " lety";
 }
 
-const NewestAuthors = (props) => {
+const MostFrequentAuthors = (props) => {
   const { loading, error, data } = useQuery(query);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
   var authors = [];
-  for(var i = 0; i < data.latestAuthors.length; i++){
-    authors.push({id: uuid(), name: data.latestAuthors[i].value, date: getCzechDateRepresentation(data.latestAuthors[i].date)});
+  for(var i = 0; i < data.mostFrequentAuthors.length; i++){
+    authors.push({id: uuid(), name: data.mostFrequentAuthors[i].value, date: getCzechDateRepresentation(data.mostFrequentAuthors[i].date)});
   }
 
   return(
   <Card {...props}>
     <CardHeader
       subtitle={`${authors.length} celkem`}
-      title="Nejnovější autoři"
+      title="Nejčastější autoři"
     />
     <Divider />
     <List>
@@ -67,7 +67,7 @@ const NewestAuthors = (props) => {
           <PersonIcon />
           <ListItemText
             primary={authors.name}
-            secondary={authors.date}
+            secondary={`poslední článek ${authors.date}`}
           />
           <IconButton
             edge="end"
@@ -89,4 +89,4 @@ const NewestAuthors = (props) => {
   </Card>
 )};
 
-export default NewestAuthors;
+export default MostFrequentAuthors;

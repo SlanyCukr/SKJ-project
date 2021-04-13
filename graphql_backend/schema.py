@@ -6,7 +6,7 @@ from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
 from database.base_objects import Article as ArticleModel, ArticleAuthor as ArticleAuthorModel, Author as AuthorModel,\
     Comment as CommentModel
 from graphql_backend.db_utils import get_comments, get_articles, get_authors_count, get_progress, get_grouped_comments,\
-    get_categories, get_latest_authors
+    get_categories, get_most_frequent_authors, get_latest_article_time
 
 
 class Article(SQLAlchemyObjectType):
@@ -66,7 +66,7 @@ class Query(graphene.ObjectType):
     authors_count = graphene.Int()
     latest_comments_graph = graphene.List(GraphValue)
     categories = graphene.List(NumberNamePair)
-    latest_authors = graphene.List(StringDateTimeTuple)
+    most_frequent_authors = graphene.List(StringDateTimeTuple)
 
     def resolve_new_comments(self, info):
         today, day_old, all = get_comments()
@@ -94,8 +94,11 @@ class Query(graphene.ObjectType):
     def resolve_categories(self, info):
         return [NumberNamePair(x[0], x[1]) for x in get_categories()]
 
-    def resolve_latest_authors(self, info):
-        return [StringDateTimeTuple(x[0], datetime.datetime.strptime(x[1], "%Y-%m-%d %H:%M:%S")) for x in get_latest_authors()]
+    def resolve_most_frequent_authors(self, info):
+        latest_authors = []
+        for rec in get_most_frequent_authors():
+            latest_authors.append(StringDateTimeTuple(rec[0], datetime.datetime.strptime(get_latest_article_time(rec[1]), "%Y-%m-%d %H:%M:%S")))
+        return latest_authors
 
 
 schema = graphene.Schema(query=Query)

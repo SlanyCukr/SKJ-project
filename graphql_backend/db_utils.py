@@ -43,6 +43,12 @@ def get_categories():
         return list(connection.execute("SELECT category, COUNT(*) as pocet FROM article GROUP BY category ORDER BY COUNT(*) DESC"))
 
 
-def get_latest_authors():
+def get_most_frequent_authors():
     with engine.connect() as connection:
-        return list(connection.execute("SELECT name, created_on FROM author ORDER BY created_on DESC LIMIT 7"))
+        return list(connection.execute("SELECT name, author_id FROM article_author JOIN author ON article_author.author_id = author.id GROUP BY name ORDER BY COUNT(*) DESC LIMIT 7"))
+
+
+def get_latest_article_time(author_id):
+    with engine.connect() as connection:
+        # don't worry about sql injection, because user can't pass data to this app
+        return list(connection.execute("SELECT MAX(article.created_on) FROM article JOIN article_author ON article_author.article_id = article.id WHERE author_id = " + str(author_id)))[0][0]
