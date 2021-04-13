@@ -99,7 +99,7 @@ const ArticleCategories = (props) => {
       <CardContent>
         <Box
           sx={{
-            height: 300,
+            height: 425,
             position: 'relative'
           }}
         >
