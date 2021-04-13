@@ -7,7 +7,7 @@ db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind
 
 def get_comments():
     with engine.connect() as connection:
-        today = connection.execute("SELECT COUNT(*) FROM comment WHERE date(created_on) > date('now', '-1 days')")
+        today = connection.execute("SELECT COUNT(*) FROM comment WHERE date(created_on) = date('now')")
         day_old = connection.execute("SELECT COUNT(*) FROM comment WHERE date(created_on) = date('now', '-1 days')")
         all = connection.execute("SELECT COUNT(*) FROM comment")
 
@@ -16,7 +16,7 @@ def get_comments():
 
 def get_articles():
     with engine.connect() as connection:
-        today = connection.execute("SELECT COUNT(*) FROM article WHERE date(created_on) > date('now', '-1 days')")
+        today = connection.execute("SELECT COUNT(*) FROM article WHERE date(created_on) = date('now')")
         day_old = connection.execute("SELECT COUNT(*) FROM article WHERE date(created_on) = date('now', '-1 days')")
         all = connection.execute("SELECT COUNT(*) FROM article")
 
@@ -41,3 +41,8 @@ def get_grouped_comments():
 def get_categories():
     with engine.connect() as connection:
         return list(connection.execute("SELECT category, COUNT(*) as pocet FROM article GROUP BY category ORDER BY COUNT(*) DESC"))
+
+
+def get_latest_authors():
+    with engine.connect() as connection:
+        return list(connection.execute("SELECT name, created_on FROM author ORDER BY created_on DESC LIMIT 7"))
