@@ -70,9 +70,9 @@ const Dashboard = () => {
           <Grid
             item
             lg={12}
-            sm={24}
+            sm={12}
             xl={12}
-            xs={48}
+            xs={12}
           >
             <ArticleCommentGraph />
           </Grid>
