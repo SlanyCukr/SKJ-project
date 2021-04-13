@@ -17,7 +17,7 @@ class Article(Base):
     published_at = Column(DateTime)
     modified_at = Column(DateTime)
     paragraphs = Column(String)
-    created_on = Column(DateTime, server_default=func.now())
+    created_on = Column(DateTime)
 
 
 class ArticleAuthor(Base):
@@ -30,14 +30,14 @@ class ArticleAuthor(Base):
     author = relationship("Author", backref=backref("author", lazy=True))
     author_id = Column(Integer, ForeignKey("author.id"), nullable=False)
 
-    created_on = Column(DateTime, server_default=func.now())
+    created_on = Column(DateTime)
 
 
 class Author(Base):
     __tablename__ = 'author'
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    created_on = Column(DateTime, server_default=func.now())
+    created_on = Column(DateTime)
 
 
 class Comment(Base):
@@ -49,7 +49,7 @@ class Comment(Base):
 
     article = relationship("Article", backref=backref("comment_article", lazy=True))
     article_id = Column(Integer, ForeignKey("article.id"), nullable=False)
-    created_on = Column(DateTime, server_default=func.now())
+    created_on = Column(DateTime)
 
 
 class Progress(Base):

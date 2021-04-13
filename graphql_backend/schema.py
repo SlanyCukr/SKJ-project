@@ -106,11 +106,11 @@ class Query(graphene.ObjectType):
     def resolve_most_frequent_authors(self, info):
         latest_authors = []
         for rec in get_most_frequent_authors():
-            latest_authors.append(StringDateTimeTuple(rec[0], datetime.datetime.strptime(get_latest_article_time(rec[1]), "%Y-%m-%d %H:%M:%S")))
+            latest_authors.append(StringDateTimeTuple(rec[0], datetime.datetime.strptime(get_latest_article_time(rec[1]), "%Y-%m-%d %H:%M:%S.%f")))
         return latest_authors
 
     def resolve_newest_articles(self, info):
-        return [ArticleInfo(x[0], x[1], x[2], datetime.datetime.strptime(x[3], "%Y-%m-%d %H:%M:%S"), x[4]) for x in get_newest_articles()]
+        return [ArticleInfo(x[0], x[1], x[2], datetime.datetime.strptime(x[3], "%Y-%m-%d %H:%M:%S.%f"), x[4]) for x in get_newest_articles()]
 
 
 schema = graphene.Schema(query=Query)

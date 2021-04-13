@@ -1,3 +1,5 @@
+import datetime
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -5,13 +7,14 @@ from database.base_objects import *
 
 engine = create_engine("sqlite:///database/database.db")
 Session = sessionmaker(bind=engine)
-#Base.metadata.drop_all(engine)
+Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
 
 
 def save_article_to_db(session, article: Article):
     fetched_article = session.query(Article).filter_by(link=article.link).scalar()
     if fetched_article is None:
+        article.created_on = datetime.datetime.now()
         session.add(article)
         session.commit()
         return article
@@ -24,6 +27,7 @@ def save_comments(session, comments: [Comment], article: Article):
         fetched_comment = session.query(Comment).filter_by(text=comment.text, author=comment.author).scalar()
         if fetched_comment is None:
             comment.article = article
+            comment.created_on = datetime.datetime.now()
             session.add(comment)
             continue
 
@@ -53,14 +57,14 @@ def save_to_db(article_data):
 
         # if not, create that author
         if not author_id:
-            author_db = Author(name=author)
+            author_db = Author(name=author, created_on=datetime.datetime.now())
             session.add(author_db)
             session.commit()
             author_id = (author_db.id,)
 
         # create linked object between author and article
         if not session.query(ArticleAuthor.id).filter(ArticleAuthor.article_id == article.id, ArticleAuthor.author_id == author_id[0]).first():
-            session.add(ArticleAuthor(article_id=article.id, author_id=author_id[0]))
+            session.add(ArticleAuthor(article_id=article.id, author_id=author_id[0], created_on=datetime.datetime.now()))
             session.commit()
 
 

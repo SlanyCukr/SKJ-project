@@ -58,7 +58,7 @@ const NewestArticles = (props) => {
                 Kategorie
               </TableCell>
               <TableCell>
-                Datum
+                Čas
               </TableCell>
               <TableCell>
                 Počet komentářů
@@ -78,7 +78,7 @@ const NewestArticles = (props) => {
                   {tableData.category}
                 </TableCell>
                 <TableCell>
-                  {moment(tableData.createdOn).format('DD/MM/YYYY')}
+                  {moment(tableData.createdOn).format('h:mm:ss')}
                 </TableCell>
                 <TableCell>
                   <Chip
