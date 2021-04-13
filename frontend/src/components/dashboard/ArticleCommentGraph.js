@@ -19,7 +19,7 @@ query{
   }
 }`;
 
-const CommentCounts = (props) => {
+const ArticleCommentGraph = (props) => {
   const theme = useTheme();
 
   const { loading, error, data } = useQuery(query);
@@ -132,7 +132,7 @@ const CommentCounts = (props) => {
   return (
     <Card {...props}>
       <CardHeader
-        title="Počty komentářů"
+        title="Komentáře a články v čase"
       />
       <Divider />
       <CardContent>
@@ -161,4 +161,4 @@ const CommentCounts = (props) => {
   );
 };
 
-export default CommentCounts;
+export default ArticleCommentGraph;

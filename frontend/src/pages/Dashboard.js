@@ -7,7 +7,7 @@ import {
 import NewArticles from 'src/components/dashboard/NewArticles';
 import NewestArticles from 'src/components/dashboard/NewestArticles';
 import MostFrequentAuthors from 'src/components/dashboard/MostFrequentAuthors';
-import CommentCounts from 'src/components/dashboard/CommentCounts';
+import ArticleCommentGraph from 'src/components/dashboard/ArticleCommentGraph';
 import TasksProgress from 'src/components/dashboard//TasksProgress';
 import NewComments from 'src/components/dashboard/NewComments';
 import AuthorsCount from 'src/components/dashboard/AuthorsCount';
@@ -69,13 +69,12 @@ const Dashboard = () => {
           </Grid>
           <Grid
             item
-            
             lg={12}
             sm={24}
             xl={12}
             xs={48}
           >
-            <CommentCounts />
+            <ArticleCommentGraph />
           </Grid>
           <Grid
             item
