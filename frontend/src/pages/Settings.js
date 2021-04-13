@@ -1,12 +1,11 @@
 import { Helmet } from 'react-helmet';
 import { Box, Container } from '@material-ui/core';
-import SettingsNotifications from 'src/components/settings/SettingsNotifications';
-import SettingsPassword from 'src/components/settings/SettingsPassword';
+import Settings from 'src/components/settings/Settings';
 
 const SettingsView = () => (
   <>
     <Helmet>
-      <title>Settings | Material Kit</title>
+      <title>Nastavení | SKJ dashboard</title>
     </Helmet>
     <Box
       sx={{
@@ -16,9 +15,8 @@ const SettingsView = () => (
       }}
     >
       <Container maxWidth="lg">
-        <SettingsNotifications />
         <Box sx={{ pt: 3 }}>
-          <SettingsPassword />
+          <Settings />
         </Box>
       </Container>
     </Box>

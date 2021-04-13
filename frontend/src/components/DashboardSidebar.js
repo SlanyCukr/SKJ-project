@@ -38,13 +38,8 @@ const items = [
   {
     href: '/app/settings',
     icon: SettingsIcon,
-    title: 'Settings'
+    title: 'Nastavení'
   },
-  {
-    href: '/404',
-    icon: AlertCircleIcon,
-    title: 'Error'
-  }
 ];
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {

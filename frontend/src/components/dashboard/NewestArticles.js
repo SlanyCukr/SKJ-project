@@ -31,7 +31,7 @@ query{
 }`;
 
 const NewestArticles = (props) => {
-  const { loading, error, data } = useQuery(query, {pollInterval: 5000});
+  const { loading, error, data } = useQuery(query, {pollInterval: localStorage.getItem('pollIntervalCostly') || 5000});
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;

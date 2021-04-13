@@ -22,7 +22,7 @@ query{
 }`;
 
 const NewComments = (props) => {
-  const { loading, error, data } = useQuery(query, {pollInterval: 2000});
+  const { loading, error, data } = useQuery(query, {pollInterval: localStorage.getItem('pollInterval') || 2000});
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
