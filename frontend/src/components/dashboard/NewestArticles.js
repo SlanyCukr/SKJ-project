@@ -78,7 +78,7 @@ const NewestArticles = (props) => {
                   {tableData.category}
                 </TableCell>
                 <TableCell>
-                  {moment(tableData.createdOn).format('h:mm:ss')}
+                  {moment(tableData.createdOn).format('HH:mm:ss')}
                 </TableCell>
                 <TableCell>
                   <Chip
