@@ -75,6 +75,13 @@ def update_progress(progress: int):
     if not progress_object:
         session.add(Progress(value=progress))
     else:
-        progress_object.value = progress
+        progress_object.value += progress
         session.add(progress_object)
+    session.commit()
+
+
+def reset_progress():
+    session = Session()
+    progress_object = session.query(Progress).scalar()
+    progress_object.value = 0
     session.commit()
