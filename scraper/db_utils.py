@@ -1,4 +1,5 @@
 import datetime
+from time import sleep
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -23,19 +24,23 @@ def save_article_to_db(session, article: Article):
 
 
 def save_comments(session, comments: [Comment], article: Article):
+    updated_comments = []
+
     for comment in comments:
         fetched_comment = session.query(Comment).filter_by(text=comment.text, author=comment.author).scalar()
         if fetched_comment is None:
-            comment.article = article
+            # just set article_id manually, because orm is expensive
+            # (if i wouldn't set it manually, it would crash in bulk_save_objects on NULL article_id column)
+            comment.article_id = article.id
             comment.created_on = datetime.datetime.now()
-            session.add(comment)
+            updated_comments.append(comment)
             continue
 
         if fetched_comment.reactions != comment.reactions:
             fetched_comment.reactions = comment.reactions
-            session.add(fetched_comment)
+            updated_comments.append(fetched_comment)
 
-    session.commit()
+    session.bulk_save_objects(updated_comments)
 
 
 def save_to_db(article_data):
@@ -53,18 +58,17 @@ def save_to_db(article_data):
 
     # check if we already have author saved
     for author in authors:
-        author_id = session.query(Author.id).filter(Author.name == author).first()
+        author_db = session.query(Author).filter(Author.name == author).first()
 
         # if not, create that author
-        if not author_id:
+        if not author_db:
             author_db = Author(name=author, created_on=datetime.datetime.now())
             session.add(author_db)
             session.commit()
-            author_id = (author_db.id,)
 
         # create linked object between author and article
-        if not session.query(ArticleAuthor.id).filter(ArticleAuthor.article_id == article.id, ArticleAuthor.author_id == author_id[0]).first():
-            session.add(ArticleAuthor(article_id=article.id, author_id=author_id[0], created_on=datetime.datetime.now()))
+        if not session.query(ArticleAuthor.id).filter(ArticleAuthor.article_id == article.id, ArticleAuthor.author_id == author_db.id).first():
+            session.add(ArticleAuthor(article=article, author=author_db, created_on=datetime.datetime.now()))
             session.commit()
 
 

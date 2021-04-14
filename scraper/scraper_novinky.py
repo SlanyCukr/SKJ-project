@@ -184,8 +184,6 @@ def run():
 
         page = browser.get_current_page()
 
-        reset_progress()
-
         # we will crawl these sites
         stalo_se_articles = page.select('div[data-dot="stalo_se"] a')
         stalo_se_articles = [x.attrs['href'] for x in stalo_se_articles]
