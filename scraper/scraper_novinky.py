@@ -3,7 +3,8 @@ import json
 from time import sleep
 from selenium import webdriver
 from selenium.webdriver import ActionChains
-from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException, StaleElementReferenceException
+from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException,\
+    StaleElementReferenceException, WebDriverException
 import mechanicalsoup
 from bs4 import BeautifulSoup
 from tqdm import tqdm
@@ -21,10 +22,15 @@ def get_browser():
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-gpu')
     chrome_options.add_argument('--disable-dev-shm-usage')
-    if os.uname().nodename == 'raspberrypi':
-        return webdriver.Chrome(options=chrome_options)
+    try:
+        if os.uname().nodename == 'raspberrypi':
+            return webdriver.Chrome(options=chrome_options)
 
-    return webdriver.Chrome(options=chrome_options, executable_path='/snap/bin/chromium.chromedriver')
+        return webdriver.Chrome(options=chrome_options, executable_path='/snap/bin/chromium.chromedriver')
+    except WebDriverException:
+        print("WebDriverException, trying to sleep for 1 sec.")
+        sleep(1)
+        return get_browser()
 
 
 def extract_info_from_iframe(browser: webdriver) -> []:
