@@ -29,9 +29,7 @@ def get_browser():
 
         return webdriver.Chrome(options=chrome_options, executable_path='/snap/bin/chromium.chromedriver')
     except WebDriverException:
-        print("WebDriverException, trying to sleep for 1 sec.")
-        sleep(1)
-        return get_browser()
+        return None
 
 
 def extract_info_from_iframe(browser: webdriver) -> []:
@@ -92,6 +90,9 @@ def retrieve_comments(url: str) -> []:
     :return: List of Comment objects
     """
     browser = get_browser()
+    if not browser:
+        return []
+
     browser.implicitly_wait(6)
     browser.get(url)
 
