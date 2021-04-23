@@ -3,6 +3,7 @@ from time import sleep
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.exc import OperationalError
 
 from database.base_objects import *
 
@@ -13,6 +14,21 @@ Session = scoped_session(session_factory)
 Base.metadata.create_all(engine)
 
 
+def retry(func):
+    def func_wrapper(*args, **kwargs):
+        while True:
+            try:
+                result = func(*args, **kwargs)
+                return result
+            except OperationalError:
+                sleep(1)
+                continue
+            except Exception as e:
+                raise e
+    return func_wrapper
+
+
+@retry
 def save_article_to_db(session, article: Article):
     fetched_article = session.query(Article).filter_by(link=article.link).scalar()
     if fetched_article is None:
@@ -24,6 +40,7 @@ def save_article_to_db(session, article: Article):
     return fetched_article
 
 
+@retry
 def save_comments(session, comments: [Comment], article: Article):
     updated_comments = []
 
@@ -44,6 +61,7 @@ def save_comments(session, comments: [Comment], article: Article):
     session.bulk_save_objects(updated_comments)
 
 
+@retry
 def save_to_db(article_data):
     session = Session()
 
@@ -73,6 +91,7 @@ def save_to_db(article_data):
             session.commit()
 
 
+@retry
 def update_progress(progress: int):
     session = Session()
 
@@ -85,6 +104,7 @@ def update_progress(progress: int):
     session.commit()
 
 
+@retry
 def reset_progress():
     session = Session()
     progress_object = session.query(Progress).scalar()
