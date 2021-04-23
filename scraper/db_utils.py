@@ -2,12 +2,13 @@ import datetime
 from time import sleep
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 
 from database.base_objects import *
 
 engine = create_engine("sqlite:///database/database.db")
-Session = sessionmaker(bind=engine)
+session_factory = sessionmaker(bind=engine)
+Session = scoped_session(session_factory)
 #Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
 
