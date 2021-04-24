@@ -38,17 +38,17 @@ LED_CHANNEL = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 RANDOM_COLOR_TTL = 100
 
 strip = get_strip()
-random_color_timer = 0
-
-random_color_red, random_color_green, random_color_blue = generate_pretty_color()
-
-random_dest_color_red, random_dest_color_green, random_dest_color_blue = generate_pretty_color()
 
 
 def flash():
-    color = generate_pretty_color()
+    random_red, random_green, random_blue = generate_pretty_color()
+    random_color = Color(int(random_red), int(random_green), int(random_blue))
+    black_color = Color(0, 0, 0)
     for i in range(10):
         for j in range(strip.numPixels()):
-            strip.setPixelColor(j, color)
+            if i % 2 == 0:
+                strip.setPixelColor(j, random_color)
+            else:
+                strip.setPixelColor(j, black_color)
         strip.show()
         time.sleep(0.25)
