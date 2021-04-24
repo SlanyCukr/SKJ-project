@@ -13,6 +13,8 @@ Session = scoped_session(session_factory)
 #Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
 
+CUR_SESSION = None
+
 
 def retry(func):
     def func_wrapper(*args, **kwargs):
@@ -22,9 +24,13 @@ def retry(func):
                 return result
             except OperationalError:
                 sleep(1)
+                CUR_SESSION.rollback()
                 continue
             except Exception as e:
-                raise e
+                sleep(1)
+                print(f'More serious exception occured. {e}')
+                CUR_SESSION.rollback()
+                continue
     return func_wrapper
 
 
@@ -63,7 +69,9 @@ def save_comments(session, comments: [Comment], article: Article):
 
 @retry
 def save_to_db(article_data):
-    session = Session()
+    global CUR_SESSION
+    CUR_SESSION = Session()
+    session = CUR_SESSION
 
     article = article_data[0]
     authors = article_data[1]
