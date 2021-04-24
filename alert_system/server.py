@@ -1,23 +1,55 @@
 import socket
+from threading import Thread
+from time import sleep
+
+from alert_system.db_utils import get_latest_article_id
 
 HOST = '0.0.0.0'
 PORT = 1111
-ALERT = False
+ALERTS = {}
+LATEST_ARTICLE_ID = None
 
 
-def run():
+def new_client(clientsocket, addr):
+    ALERTS[addr] = False
+    while True:
+        if ALERTS[addr]:
+            clientsocket.sendall(b'1')
+            ALERTS[addr] = False
+    del ALERTS[addr]
+    clientsocket.close()
+
+
+def run_server():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((HOST, PORT))
         s.listen()
-        conn, addr = s.accept()
-        with conn:
-            print('Connected by', addr)
+        while True:
+            conn, addr = s.accept()
 
-            global ALERT
-            if ALERT:
-                conn.sendall(b'1')
-                ALERT = False
+            print(f'New client {addr}.')
+
+            client_thread = Thread(target=new_client, args=(conn, addr))
+            client_thread.start()
+        s.close()
+
+
+def check_alerts():
+    global LATEST_ARTICLE_ID
+
+    while True:
+        article_id = get_latest_article_id()
+        if article_id != LATEST_ARTICLE_ID:
+            for key in ALERTS.keys():
+                ALERTS[key] = True
+            LATEST_ARTICLE_ID = article_id
+        sleep(1)
 
 
 if __name__ == '__main__':
-    run()
+    print(f'Running alert server on {HOST}:{PORT}')
+
+    run_server_thread = Thread(target=run_server)
+    run_server_thread.start()
+
+    check_alerts()

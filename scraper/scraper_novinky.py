@@ -1,3 +1,4 @@
+import threading
 from datetime import datetime
 import json
 from time import sleep
@@ -10,13 +11,12 @@ from bs4 import BeautifulSoup
 from tqdm import tqdm
 import os
 from multiprocessing import Pool
-from threading import Thread
 
 from database.base_objects import Article, Comment
 from scraper.db_utils import save_to_db, update_progress, reset_progress
-import alert_system
 
 BASE_URL = "https://novinky.cz/stalo-se"
+EVENT = None
 
 
 def get_browser():
@@ -181,15 +181,10 @@ def process_portion_of_articles(stalo_se_articles, original_article_len: int):
 
         save_to_db(extract_article(browser, article_url))
 
-
-
         update_progress(progress)
 
 
 def run():
-    alert_thread = Thread(target=run)
-    alert_thread.start()
-
     browser = mechanicalsoup.StatefulBrowser()
 
     while True:
@@ -209,8 +204,6 @@ def run():
         print("---------------------------------------")
         print("Sleeping before next crawling cycle...")
         print("---------------------------------------")
-        global ALERT
-        ALERT = True
         sleep(50)
         reset_progress()
 
