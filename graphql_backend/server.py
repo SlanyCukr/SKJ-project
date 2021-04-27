@@ -4,6 +4,9 @@ from flask_cors import CORS, cross_origin
 
 from graphql_backend.schema import schema, Article, ArticleAuthor, Comment, Author
 from graphql_backend.db_utils import db_session
+from settings import get_settings
+
+SETTINGS = get_settings()
 
 app = Flask(__name__)
 app.debug = True
@@ -28,4 +31,4 @@ def shutdown_session(exception=None):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001)
+    app.run(host='0.0.0.0', port=SETTINGS["graphql_server_port"])

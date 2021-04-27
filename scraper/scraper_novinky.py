@@ -1,4 +1,3 @@
-import threading
 from datetime import datetime
 import json
 from time import sleep
@@ -14,9 +13,10 @@ from multiprocessing import Pool
 
 from database.base_objects import Article, Comment
 from scraper.db_utils import save_to_db, update_progress, reset_progress
+from settings import get_settings
 
 BASE_URL = "https://novinky.cz/stalo-se"
-EVENT = None
+SETTINGS = get_settings()
 
 
 def get_browser():
@@ -48,7 +48,7 @@ def extract_info_from_iframe(browser: webdriver) -> []:
                 action.move_to_element(button).click().perform()
             except (ElementClickInterceptedException, StaleElementReferenceException):
                 pass
-            sleep(0.5)
+            sleep(0.5 * SETTINGS["lazy_factor"])
             button = browser.find_element_by_css_selector("button[data-dot='strankovani/nacist_dalsi']")
     except NoSuchElementException:
         pass
@@ -61,7 +61,7 @@ def extract_info_from_iframe(browser: webdriver) -> []:
                 action.move_to_element(button).click().perform()
             except (ElementClickInterceptedException, StaleElementReferenceException):
                 pass
-            sleep(0.3)
+            sleep(0.3 * SETTINGS["lazy_factor"])
     except NoSuchElementException:
         pass
 
@@ -78,7 +78,7 @@ def extract_info_from_iframe(browser: webdriver) -> []:
         author = authors[i].text
         text = texts[i].text
 
-        # expect that reaction can miss in some comments
+        # expect that reaction can be missing in some comments
         reactions_count = 0
         if len(reactions) > i:
             reactions_count = reactions[i].text
@@ -195,7 +195,7 @@ def run():
         # we will crawl these sites
         stalo_se_articles = page.select('div[data-dot="stalo_se"] a')
         stalo_se_articles = [x.attrs['href'] for x in stalo_se_articles]
-        n = 3
+        n = SETTINGS["chunk_size"]
         chunks = [stalo_se_articles[i:i + n] for i in range(0, len(stalo_se_articles), n)]
         parameters = [(x, len(stalo_se_articles)) for x in chunks]
         with Pool(len(parameters)) as p:
@@ -204,7 +204,7 @@ def run():
         print("---------------------------------------")
         print("Sleeping before next crawling cycle...")
         print("---------------------------------------")
-        sleep(50)
+        sleep(50 * SETTINGS["lazy_factor"])
         reset_progress()
 
 

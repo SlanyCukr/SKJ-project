@@ -8,3 +8,4 @@ graphene-sqlalchemy==2.3.0
 Flask==1.1.2
 Flask-GraphQL==2.0.1
 Flask-Cors==3.0.10
+click==7.1.2

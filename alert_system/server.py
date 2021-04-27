@@ -3,9 +3,11 @@ from threading import Thread
 from time import sleep
 
 from alert_system.db_utils import get_latest_article_id
+from settings import get_settings
 
+SETTINGS = get_settings()
 HOST = '0.0.0.0'
-PORT = 1111
+PORT = SETTINGS["alert_server_port"]
 ALERTS = {}
 LATEST_ARTICLE_ID = None
 
@@ -14,6 +16,7 @@ def new_client(clientsocket, addr):
     ALERTS[addr] = False
     while True:
         if ALERTS[addr]:
+            print(f'Sending alert to {addr}.')
             clientsocket.sendall(b'1')
             ALERTS[addr] = False
     del ALERTS[addr]
