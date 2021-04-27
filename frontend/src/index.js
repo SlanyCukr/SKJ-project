@@ -4,8 +4,10 @@ import * as serviceWorker from './serviceWorker';
 import App from './App';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
+var config = require('./config.json');
+
 const client = new ApolloClient({
-  uri: localStorage.getItem('urlGraphQL') || "http://localhost:5001/graphql",
+  uri: localStorage.getItem('urlGraphQL') || "http://" + config.graphql_server_host + ":" + config.graphql_server_port + "/graphql",
   cache: new InMemoryCache()
 });
 
