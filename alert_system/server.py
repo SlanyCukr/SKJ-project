@@ -15,6 +15,7 @@ LATEST_ARTICLE_ID = None
 def new_client(clientsocket, addr):
     ALERTS[addr] = False
     while True:
+        sleep(5)
         if ALERTS[addr]:
             print(f'Sending alert to {addr}.')
             clientsocket.sendall(b'1')
@@ -46,7 +47,7 @@ def check_alerts():
             for key in ALERTS.keys():
                 ALERTS[key] = True
             LATEST_ARTICLE_ID = article_id
-        sleep(1)
+        sleep(5)
 
 
 if __name__ == '__main__':
