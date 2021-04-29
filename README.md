@@ -1,7 +1,7 @@
 # Novinky.cz scraper
 ## Installation
 1. Make installation script executable `chmod +x install.sh`
-2. Run the installation script `./install.sh`
+2. Run the installation script as sudo `sudo ./install.sh`
 3. Handle the chromium browser driver installation
 
 ## Run the scraper
