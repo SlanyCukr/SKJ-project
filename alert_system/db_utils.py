@@ -17,7 +17,6 @@ def lock_cache(func):
             cached_results[func] = result
             return result
         except OperationalError as e:
-            print(f'Returning cached result, because database is locked. {e}')
             if func in cached_results:
                 return cached_results[func]
             return 0
