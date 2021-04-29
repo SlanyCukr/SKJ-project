@@ -86,6 +86,9 @@ def extract_info_from_iframe(browser: webdriver) -> []:
         comments.append(Comment(author=author, text=text, reactions=reactions_count))
         progress_bar.update(1)
 
+    # browser doesn't need to be open from now on
+    browser.quit()
+
     return comments
 
 
