@@ -1,3 +1,4 @@
+import subprocess
 from datetime import datetime
 import json
 from time import sleep
@@ -203,6 +204,8 @@ def run():
         parameters = [(x, len(stalo_se_articles)) for x in chunks]
         with Pool(len(parameters)) as p:
             p.starmap(process_portion_of_articles, parameters)
+
+        subprocess.run("pkill -f chromium-browser", shell=True)
 
         print("---------------------------------------")
         print("Sleeping before next crawling cycle...")
